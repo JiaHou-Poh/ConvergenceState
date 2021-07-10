@@ -4,7 +4,7 @@ function [] = MVPA_Convergence(vol_data,roi_list,roi_names,class,distance,repl,p
 % item with a cluster centroid.
 %
 % Convergence is defined as the distance of each point to the
-% cluster centroid (based on class vector).
+% cluster centroid.
 %
 % Also computes item-wise centrality, defined as the distance of each point
 % to every other point belonging to the same class.
