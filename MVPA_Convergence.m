@@ -1,13 +1,13 @@
 function [] = MVPA_Convergence(vol_data,roi_list,roi_names,class,distance,repl,partition, par_vect,num_cluster,save_fldr)
 %%
-% Examines pattern representation in each ROI by computing pairwise
-% distances of each item.
-%
-% Item-wise centrality is defined as the mean distance of each point, to
-% every other point belonging to the same class.
+% Examines state representation in each ROI by computing distance of each
+% item with a cluster centroid.
 %
 % Convergence is defined as the distance of each point to the
 % cluster centroid (based on class vector).
+%
+% Also computes item-wise centrality, defined as the distance of each point
+% to every other point belonging to the same class.
 %
 % Input:
 % 1) vol:
@@ -70,7 +70,7 @@ if partition == 1
     par_ls = unique(par_vect);
 else
     par_ls = 1;
-    par_vect = ones();
+    par_vect = ones(num_item,1);
 end
 num_par = length(par_ls);
 
