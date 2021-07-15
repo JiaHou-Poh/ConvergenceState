@@ -3,22 +3,29 @@ function [] = MVPA_Convergence(vol_data,roi_list,roi_names,class,distance,repl,p
 % Examines state representation in each ROI by computing distance of each
 % item with a cluster centroid.
 %
-% Convergence is defined as the distance of each point to the
-% cluster centroid.
+% Convergence is defined as the distance of each point to a
+% cluster centroid. Cluster number can be adjusted based on the number of
+% expected 'states'.
 %
-% Also computes item-wise centrality, defined as the distance of each point
-% to every other point belonging to the same class.
+% Also computes item-wise representational distance, defined as the distance of each point
+% to every other point. This measure can also take into account class
+% membership, computing a separate distance for within- and between- class
+% distance.
 %
 % Input:
 % 1) vol:
 %   Cell array of 3D .nii or .nii.gz file. For array of 3D files each
 %   volume should occupy a separate row.
+%   !!IMPORTANT!! - ROI mask and the brain data (vol) must have the same
+%   dimensions and must be aligned in the same space.
 %
 % 2)roi_list:
-%   Cell array of binary ROI masks (.nii or .nii.gz).
+%   Cell array of binary ROI masks (.nii or .nii.gz). 
+%   !!IMPORTANT!! - ROI mask and the brain data (vol) must have the same
+%   dimensions and must be aligned in the same space.
 %
 % 3)roi_names:
-%   Cell array of string to save the ROIs ask.
+%   Cell array of string to save the ROIs as.
 %
 % 4)class:
 %   Vector with length equal to vol. A vector of 1s can be used if no class
@@ -31,17 +38,18 @@ function [] = MVPA_Convergence(vol_data,roi_list,roi_names,class,distance,repl,p
 %
 % 6)repl:
 %   Number of repetition to run the K-means algorithm with different
-%   starting points.
+%   starting points. Note that when K = 1, solution should be deterministic
+%   regardless of the distance metric used.
 %
 % 7) partition:
 %   If partition == 1, centroid will be defined using P-1 partition and
 %   distance to centroid will be measured using the left out partition.
 %   Point-to-point distance will also exclude trials from the same
-%   partition. Requires input parvect
+%   partition. Requires input parvect with values ranging from 1 to P.
 %
 % 8) par_vect:
-%   If partition == 1, parvect will be a vector of values corresponding to
-%   the partition that each item belongs to.
+%   If partition == 1, parvect will be a vector of values from 1 to P corresponding to
+%   the partition that each item belongs to (e.g. run or block number).
 %
 % 9) num_cluser:
 %   Number of cluster (k) for k-means clustering.
@@ -49,10 +57,37 @@ function [] = MVPA_Convergence(vol_data,roi_list,roi_names,class,distance,repl,p
 % 10) save_fldr:
 %       Directory for saving the outputs.
 %
+% Outputs a single structure 'rep_dist' with the following fields:
+% 1) mean_act: 
+%       mean value over the entire ROI.
+% 
+% 2) point2centroids.p2cs:
+%       distance of each point to the respective k-centroids.
+%
+% 3) point2centroids.p2cs_shortest:
+%       distance of each point to the centroid which it is closest to.
+%
+% 4) point2points.p2ps:
+%       distance of each point to all other points regardless of class membership
+%
+% 5) point2points.within_class_p2ps:
+%       distance of each point to all other points that are defined as belonging to the
+%       same class based on the vector 'class'.
+%
+% 6) point2points.between_class_p2ps:
+%       distance of each point to all other points that are defined as
+%       belonging to a different class based on the vector 'class'.
+%
 % Note: This function requires MRIread from Freesurfer.
 %
 % Edit 1/9/2020
 % Added mean activation to variables saved.
+%
+% Edit 15/7/2021
+% Added comments for ouput structure and commented out the declaration of
+% par_vect in line 100 (should take from input).
+%
+%
 %%
 rep_dist = struct();
 tmp_data = vol_data{1};
@@ -186,7 +221,7 @@ for s = 1 : num_roi
     rep_dist.point2points.between_class_p2ps = between_p2ps;
     
     % Saving
-    savefname = [save_fldr wroi '_' num2str(num_cls) 'cls_k' num2str(num_cluster) '_' distance '_RepresentationalDistance.mat'];
+    savefname = [save_fldr wroi '_' num2str(num_cls) 'cls_k' num2str(num_cluster) '_' distance '_RepresentationalConvergence.mat'];
     save(savefname,'rep_dist','centroid_arr','vol_data','roi_list','roi_names',...
         'class','distance','repl','partition','par_vect','save_fldr');
 end
