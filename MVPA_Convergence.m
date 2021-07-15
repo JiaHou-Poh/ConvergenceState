@@ -70,7 +70,7 @@ if partition == 1
     par_ls = unique(par_vect);
 else
     par_ls = 1;
-    par_vect = ones(num_item,1);
+    %par_vect = ones(num_item,1);
 end
 num_par = length(par_ls);
 
