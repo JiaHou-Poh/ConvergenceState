@@ -92,10 +92,6 @@ brainvx = size(tmp_vol.vol,1) * size(tmp_vol.vol, 2) * size(tmp_vol.vol, 3);
 num_roi = size(roi_list);
 num_item = size(vol_data,1);
 
-% class_ls = unique(class);
-% class_ls = class_ls(~isnan(class_ls));
-% num_cls = length(class_ls);
-
 if partition == 1
     par_ls = unique(par_vect);
 else
@@ -106,11 +102,6 @@ num_par = length(par_ls);
 
 p2cs = NaN(num_item,num_cluster);
 short_p2cs = NaN(num_item,1);
-
-% p2ps = NaN(num_item,1);
-% class_p2ps = NaN(num_item,num_cls);
-% within_p2ps = NaN(num_item,1);
-% between_p2ps = NaN(num_item,1);
 
 centroid_arr = cell(num_par,1);
 
