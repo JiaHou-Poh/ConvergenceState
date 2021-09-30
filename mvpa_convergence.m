@@ -1,4 +1,4 @@
-function [] = MVPA_Convergence(vol_data,roi_list,roi_names,distance,repl,partition, par_vect,num_cluster,save_fldr)
+function [] = mvpa_convergence(vol_data,roi_list,roi_names,distance,repl,partition, par_vect,num_cluster,save_fldr)
 %%
 % Examines state representation in each ROI by computing distance of each
 % item with a cluster centroid.
@@ -41,11 +41,12 @@ function [] = MVPA_Convergence(vol_data,roi_list,roi_names,distance,repl,partiti
 %   If partition == 1, centroid will be defined using P-1 partition and
 %   distance to centroid will be measured using the left out partition.
 %   Point-to-point distance will also exclude trials from the same
-%   partition. Requires input parvect with values ranging from 1 to P.
+%   partition. Requires input par_vect with values ranging from 1 to P.
 %
 % 7) par_vect:
-%   If partition == 1, parvect will be a vector of values from 1 to P corresponding to
+%   If partition == 1, par_vect will be a vector of values from 1 to P corresponding to
 %   the partition that each item belongs to (e.g. run or block number).
+%   If partition ==0, input a vector of ones.
 %
 % 8) num_cluser:
 %   Number of cluster (k) for k-means clustering.
@@ -79,6 +80,9 @@ function [] = MVPA_Convergence(vol_data,roi_list,roi_names,distance,repl,partiti
 % please note that it has not been thoroughly tested.
 % Also remove the input required for 'class'
 %
+% Edit 29/9/2021
+% Added comments to indicate that par_vect should be a vector of 1s when
+% partition == 0.
 %%
 rep_dist = struct();
 tmp_data = vol_data{1};
