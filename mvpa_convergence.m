@@ -1,4 +1,4 @@
-function [] = mvpa_convergence(vol_data,roi_list,roi_names,distance,repl,partition, par_vect,num_cluster,save_fldr)
+function [] = Convergence_mvpa(vol_data,roi_list,roi_names,distance,repl,partition, par_vect,num_cluster,save_fldr)
 %%
 % Examines state representation in each ROI by computing distance of each
 % item with a cluster centroid.
